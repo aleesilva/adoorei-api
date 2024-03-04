@@ -29,4 +29,13 @@ class SaleRepository implements ISaleRepository
             return new SalesNotFound('Sales not found');
         }
     }
+
+    public function findSaleById(int $id): Sale|SalesNotFound
+    {
+        try {
+            return Sale::query()->find($id)->first();
+        } catch (Exception) {
+            return new SalesNotFound('Sale not found');
+        }
+    }
 }

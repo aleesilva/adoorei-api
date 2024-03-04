@@ -82,4 +82,35 @@ describe('Testing a Sale Repository', function () {
             ->toBeInstanceOf(SalesNotFound::class)
             ->and($sales->getMessage())->toBe('Sales not found');
     });
+
+
+    it('should be able find a sale by id', function () {
+        $sale = Sale::factory(1)->create();
+        $saleRepository = new SaleRepository();
+        $sale = $saleRepository->findSaleById($sale->first()->id);
+        expect($sale)
+            ->toBeInstanceOf(Sale::class)
+            ->and($sale->amount)->toBe(30000)
+            ->and($sale->products)->toBeArray()
+            ->and($sale->products[0])->toBeArray()
+            ->and($sale->products[0]['id'])->toBe(1)
+            ->and($sale->products[0]['name'])->toBe('Celular 1')
+            ->and($sale->products[0]['price'])->toBe(10000)
+            ->and($sale->products[0]['amount'])->toBe(1)
+            ->and($sale->products[1])->toBeArray()
+            ->and($sale->products[1]['id'])->toBe(2)
+            ->and($sale->products[1]['name'])->toBe('Celular 3')
+            ->and($sale->products[1]['price'])->toBe(20000)
+            ->and($sale->products[1]['amount'])->toBe(2);
+    });
+
+    it('should be not able find a sale by id', function () {
+        $saleRepository = Mockery::mock(ISaleRepository::class);
+        $saleRepository->shouldReceive('findSaleById')->andReturn(new SalesNotFound ('Sale not found'));
+        $sale = $saleRepository->findSaleById(1);
+        expect($sale)
+            ->toBeInstanceOf(SalesNotFound::class)
+            ->and($sale->getMessage())->toBe('Sale not found');
+
+    });
 });

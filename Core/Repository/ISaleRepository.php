@@ -12,4 +12,6 @@ interface ISaleRepository
     public function createSale(array $sale): Sale | Exception;
 
     public function listSales(): Collection | SalesNotFound;
+
+    public function findSaleById(int $id): Sale | SalesNotFound;
 }
