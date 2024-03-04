@@ -1,0 +1,47 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "array_indentation": true,
+        "array_syntax": {
+            "syntax": "short"
+        },
+        "blank_line_before_statement": {
+            "statements": [
+                "break",
+                "continue",
+                "declare",
+                "return",
+                "throw",
+                "try",
+                "while",
+                "for",
+                "foreach",
+                "if"
+            ]
+        },
+        "braces": {
+            "allow_single_line_closure": false,
+            "allow_single_line_anonymous_class_with_empty_body": false,
+            "position_after_anonymous_constructs": "same",
+            "position_after_control_structures": "same",
+            "position_after_functions_and_oop_constructs": "next"
+        },
+        "cast_spaces": false,
+        "concat_space": true,
+        "no_unused_imports": true,
+        "simplified_null_return": true,
+        "assign_null_coalescing_to_coalesce_equal": true,
+        "clean_namespace": true,
+        "trailing_comma_in_multiline": true,
+        "binary_operator_spaces": {
+            "operators": {
+                "=>": "align_single_space_minimal",
+                "=": "align_single_space_minimal",
+                "==": "align_single_space_minimal",
+                "===": "align_single_space_minimal",
+                "!=": "align_single_space_minimal",
+                "!==": "align_single_space_minimal"
+            }
+        }
+    }
+}

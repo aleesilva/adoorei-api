@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ProductRepository implements IProductRepository
 {
-
     public function listProducts(): Collection
     {
         return Product::all();

@@ -8,9 +8,10 @@ use Illuminate\Support\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
-   private array $repositories = [
-       IProductRepository::class => ProductRepository::class
+    private array $repositories = [
+        IProductRepository::class => ProductRepository::class,
     ];
+
     public function register(): void
     {
         foreach ($this->repositories as $interface => $implementation) {
