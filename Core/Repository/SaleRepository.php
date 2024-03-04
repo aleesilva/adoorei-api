@@ -8,7 +8,6 @@ use App\Models\Sale;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
 
 class SaleRepository implements ISaleRepository
 {
@@ -51,6 +50,17 @@ class SaleRepository implements ISaleRepository
             return $sale;
         } catch (Exception) {
             return new SaleCanceledError('Sale cannot be canceled');
+        }
+    }
+
+    public function addProductsToSale(int $id, array $products): Sale|SalesNotFound
+    {
+try {
+            $sale = Sale::query()->find($id)->first();
+            $sale->products()->attach($products);
+            return $sale;
+        } catch (Exception) {
+            return new SalesNotFound('Sale not found');
         }
     }
 }
