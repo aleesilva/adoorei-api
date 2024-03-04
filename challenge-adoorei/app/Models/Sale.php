@@ -11,7 +11,8 @@ class Sale extends Model
     use HasFactory;
 
     protected $casts = [
-      'products' => 'array'
+      'products' => 'array',
+        'cancelled_at' => 'datetime'
     ];
 
     protected $guarded = [];

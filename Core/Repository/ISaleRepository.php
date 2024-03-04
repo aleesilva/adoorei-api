@@ -1,6 +1,7 @@
 <?php
 
 namespace Core\Repository;
+use App\Exceptions\SaleCanceledError;
 use App\Exceptions\SalesNotFound;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -14,4 +15,6 @@ interface ISaleRepository
     public function listSales(): Collection | SalesNotFound;
 
     public function findSaleById(int $id): Sale | SalesNotFound;
+
+    public function cancelSale(int $id): Sale |  SaleCanceledError;
 }

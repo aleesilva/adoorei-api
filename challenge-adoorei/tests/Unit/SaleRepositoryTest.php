@@ -1,7 +1,9 @@
 <?php
 
+use App\Exceptions\SaleCanceledError;
 use App\Exceptions\SalesNotFound;
 use App\Models\Sale;
+use Carbon\Carbon;
 use Core\Repository\ISaleRepository;
 use Core\Repository\SaleRepository;
 use Illuminate\Database\Eloquent\Collection;
@@ -112,5 +114,23 @@ describe('Testing a Sale Repository', function () {
             ->toBeInstanceOf(SalesNotFound::class)
             ->and($sale->getMessage())->toBe('Sale not found');
 
+    });
+
+    it('should be able cancel a sale', function () {
+        $sale = Sale::factory(1)->create();
+        $saleRepository = new SaleRepository();
+        $sale = $saleRepository->cancelSale($sale->first()->id);
+        expect($sale)
+            ->toBeInstanceOf(Sale::class)
+            ->and($sale->cancelled_at)->not->toBeNull();
+    });
+
+    it('should be not able cancel a sale', function () {
+        $saleRepository = Mockery::mock(ISaleRepository::class);
+        $saleRepository->shouldReceive('cancelSale')->andReturn(new SaleCanceledError ('Sale cannot be canceled'));
+        $sale = $saleRepository->cancelSale(1);
+        expect($sale)
+            ->toBeInstanceOf(SaleCanceledError::class)
+            ->and($sale->getMessage())->toBe('Sale cannot be canceled');
     });
 });
