@@ -7,9 +7,12 @@ use function Pest\Laravel\assertDatabaseCount;
 
 describe('Testing Product Repository', function () {
     it('should return all products', function () {
-        $productsFake      = Product::factory()->count(10)->create();
+        Product::factory()->count(10)->create();
+
         $productRepository = new ProductRepository();
-        $products          = $productRepository->listProducts();
+
+        $products = $productRepository->listProducts();
+
         assertDatabaseCount('products', 10);
     });
 

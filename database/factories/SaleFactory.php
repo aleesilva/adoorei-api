@@ -2,13 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Product>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Sale>
  */
-class ProductFactory extends Factory
+class SaleFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,9 +17,7 @@ class ProductFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'        => 'Celular '.$this->faker->randomNumber(1, 10),
-            'price'       => $this->faker->randomFloat(2, 0, 1000),
-            'description' => $this->faker->text,
+            //
         ];
     }
 }
