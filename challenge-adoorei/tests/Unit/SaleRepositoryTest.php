@@ -4,6 +4,7 @@ use App\Exceptions\SalesNotFound;
 use App\Models\Sale;
 use Core\Repository\ISaleRepository;
 use Core\Repository\SaleRepository;
+use Illuminate\Database\Eloquent\Collection;
 use function Pest\Laravel\assertDatabaseCount;
 
 describe('Testing a Sale Repository', function () {
@@ -47,7 +48,30 @@ describe('Testing a Sale Repository', function () {
        Sale::factory(1)->create();
         $saleRepository = new SaleRepository();
         $sales = $saleRepository->listSales();
+
        assertDatabaseCount('sales', $sales->count());
+       expect($sales->pluck('amount')[0])->toBe(30000)
+           ->and($sales)
+           ->toBeInstanceOf(Collection::class)
+           ->and($sales->count())->toBe(1)
+           ->and($sales->first())->toBeInstanceOf(Sale::class)
+           ->and($sales)->contains([
+               'amount' => 30000,
+               'products' => [
+                   [
+                       'id' => 1,
+                       'name' => 'Celular 1',
+                       'price' => 10000,
+                       'amount' => 1,
+                   ],
+                   [
+                       'id' => 2,
+                       'name' => 'Celular 3',
+                       'price' => 20000,
+                       'amount' => 2,
+                   ],
+               ],
+           ]);
     });
 
     it('should be not able list all sales', function () {
