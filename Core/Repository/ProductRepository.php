@@ -2,6 +2,7 @@
 
 namespace Core\Repository;
 
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Collection;
 
 class ProductRepository implements IProductRepository
@@ -9,7 +10,6 @@ class ProductRepository implements IProductRepository
 
     public function listProducts(): Collection
     {
-        // TODO: Implement listProducts() method.
-        return new Collection();
+        return Product::all();
     }
 }
