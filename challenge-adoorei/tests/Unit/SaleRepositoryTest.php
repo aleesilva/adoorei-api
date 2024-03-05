@@ -131,4 +131,46 @@ describe('Testing a Sale Repository', function () {
             ->toBeInstanceOf(SaleCanceledError::class)
             ->and($sale->getMessage())->toBe('Sale cannot be canceled');
     });
+
+    it('should be able add products to a sale', function () {
+        $sale           = Sale::factory(1)->create();
+        $saleRepository = new SaleRepository();
+        $sale           = $saleRepository->addProductsToSale($sale->first()->id, [
+            [
+                'id'     => 3,
+                'name'   => 'Celular 4',
+                'price'  => 30000,
+                'amount' => 1,
+            ],
+            [
+                'id'     => 4,
+                'name'   => 'Celular 5',
+                'price'  => 20000,
+                'amount' => 1,
+            ],
+        ]);
+        expect($sale)
+            ->toBeInstanceOf(Sale::class)
+            ->and($sale->products)->toBeArray()
+            ->and($sale->products[2])->toBeArray()
+            ->and($sale->products[2]['id'])->toBe(3)
+            ->and($sale->products[2]['name'])->toBe('Celular 4')
+            ->and($sale->products[2]['price'])->toBe(30000)
+            ->and($sale->products[2]['amount'])->toBe(1)
+            ->and($sale->products[3])->toBeArray()
+            ->and($sale->products[3]['id'])->toBe(4)
+            ->and($sale->products[3]['name'])->toBe('Celular 5')
+            ->and($sale->products[3]['price'])->toBe(20000)
+            ->and($sale->products[3]['amount'])->toBe(1);
+    });
+
+    it('should be not able add products to a sale', function () {
+        $saleRepository = Mockery::mock(ISaleRepository::class);
+        $saleRepository->shouldReceive('addProductsToSale')->andReturn(new SalesNotFound('Sale not found'));
+        $sale = $saleRepository->addProductsToSale(1, []);
+        expect($sale)
+            ->toBeInstanceOf(SalesNotFound::class)
+            ->and($sale->getMessage())->toBe('Sale not found');
+    });
+
 });

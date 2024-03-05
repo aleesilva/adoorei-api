@@ -7,11 +7,14 @@ use App\Exceptions\SalesNotFound;
 use App\Models\Sale;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\App;
+use function Psy\debug;
 
 class SaleRepository implements ISaleRepository
 {
-    public function createSale($sale): Sale | Exception
+    public function createSale($sale): Sale|Exception
     {
         try {
             Sale::query()->create($sale);
@@ -55,11 +58,18 @@ class SaleRepository implements ISaleRepository
 
     public function addProductsToSale(int $id, array $products): Sale|SalesNotFound
     {
-try {
+        try {
             $sale = Sale::query()->find($id)->first();
-            $sale->products()->attach($products);
+            $amount = 0;
+            foreach ($products as $product) {
+                $sale->products = Arr::add($sale->products,count($sale->products), $product);
+                $amount += $product['price'] * $product['amount'];
+            }
+            $sale->amount = $amount;
+            $sale->save();
             return $sale;
-        } catch (Exception) {
+        } catch (Exception $e) {
+            dd($e);
             return new SalesNotFound('Sale not found');
         }
     }
