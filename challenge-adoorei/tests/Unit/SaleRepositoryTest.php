@@ -172,5 +172,4 @@ describe('Testing a Sale Repository', function () {
             ->toBeInstanceOf(SalesNotFound::class)
             ->and($sale->getMessage())->toBe('Sale not found');
     });
-
 });
