@@ -1,0 +1,30 @@
+version: '3.9'
+
+networks:
+  adoorei-network:
+    driver: bridge
+
+services:
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: ./challenge-adoorei/.docker/Dockerfile
+    networks:
+      - adoorei-network
+    ports:
+      - "9002:9002"
+    depends_on:
+        - database
+
+  database:
+    container_name: database
+    image: postgres
+    environment:
+      POSTGRES_USER: api
+      POSTGRES_PASSWORD: api
+      POSTGRES_DB: adoorei-api
+    networks:
+      - adoorei-network
+    ports:
+      - "5432:5432"
