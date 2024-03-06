@@ -7,6 +7,7 @@ RUN apk update && apk add bash
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
+RUN apk add --no-cache nodejs npm
 
 RUN install-php-extensions pcntl sockets pdo_pgsql swoole
 

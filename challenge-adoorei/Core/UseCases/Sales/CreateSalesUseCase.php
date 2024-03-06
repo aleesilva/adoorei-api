@@ -7,24 +7,28 @@ use App\Models\Sale;
 use Core\Repository\ProductRepository;
 use Core\Repository\SaleRepository;
 use Exception;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 
-class CreateSalesUseCase
+readonly class CreateSalesUseCase
 {
-    public function __construct(private readonly SaleRepository $saleRepository, private readonly ProductRepository $productRepository)
+    public function __construct(private SaleRepository $saleRepository)
     {
     }
 
     public function execute($sale): Exception|Sale
     {
+
+        $sale['amount'] = 0;
+
         foreach ($sale['products'] as $product) {
-            $product = Product::query()->find($product['id']);
-            if (!$product) {
+            $p = Product::query()->find($product['id']);
+            if (!$p) {
                 return new Exception('Product not found');
             }
+            $sale['amount'] += $p->price * $product['quantity'];
         }
-
-        dd($sale);
-
+//    $sale['amount'] = 100;
         return $this->saleRepository->createSale($sale);
     }
 }

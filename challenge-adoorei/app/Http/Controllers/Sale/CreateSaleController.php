@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Sale;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Sale\CreateSaleInput;
+use App\Http\Resources\SaleOutput;
 use Core\UseCases\SalesUseCase;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use OpenApi\Annotations as OA;
@@ -43,11 +45,11 @@ class CreateSaleController extends Controller
      *
      *
      */
-    public function __invoke(CreateSaleInput $request): JsonResponse
+    public function __invoke(Request $request): SaleOutput | JsonResponse
     {
         try {
             $sale = $this->salesUseCase->createSale($request->all());
-            return response()->json($sale, 201);
+            return new SaleOutput($sale);
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }

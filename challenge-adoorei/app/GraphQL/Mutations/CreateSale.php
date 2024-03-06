@@ -3,7 +3,10 @@
 namespace App\GraphQL\Mutations;
 
 use Core\UseCases\SalesUseCase;
-use Laravel\Octane\Exceptions\DdException;
+use Exception;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 final readonly class CreateSale
 {
@@ -12,10 +15,9 @@ final readonly class CreateSale
     }
 
     /** @param  array{}  $args
-     * @throws DdException
      */
     public function __invoke(null $_, array $args)
     {
-        return $this->salesUseCase->createSale($args);
+        return $this->salesUseCase->createSale($args['input'][0]);
     }
 }

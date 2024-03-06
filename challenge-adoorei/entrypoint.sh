@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 
 composer install --no-interaction
+
 npm install --no-interaction --no-progress
 
 composer dump-autoload
@@ -14,12 +15,9 @@ php artisan optimize:clear && \
 php artisan optimize
 
 echo "Running migrations"
-php artisan migrate
+php artisan migrate:fresh --seed
 echo "Migrations ran successfully"
 
-echo "run seed"
-php artisan db:seed
-echo "Seed ran successfully"
 
 echo "Starting server"
-php artisan octane:start  --server=swoole --port=9002 --workers=4 --host=0.0.0.0
+php artisan octane:start --watch --server=swoole --port=9090 --workers=4 --host=0.0.0.0

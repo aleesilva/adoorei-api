@@ -9,16 +9,25 @@ use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class SaleRepository implements ISaleRepository
 {
     public function createSale($sale): Sale|Exception
     {
         try {
-            Sale::query()->create($sale);
+            $s = Sale::query()->create([
+                'amount' => $sale['amount'],
+                'cancelled_at' => null
+            ]);
+
+            foreach ($sale['products'] as $product) {
+                $s->products()->attach($product['id'], array('quantity' => $product['quantity']));
+            }
 
             return Sale::query()->get()->last();
         } catch (Exception $e) {
+            dd($e->getMessage());
             return new Exception('Invalid data');
         }
     }
@@ -44,7 +53,7 @@ class SaleRepository implements ISaleRepository
     public function cancelSale(int $id): Sale|SaleCanceledError
     {
         try {
-            $sale               = Sale::query()->find($id)->first();
+            $sale = Sale::query()->find($id)->first();
             $sale->cancelled_at = Carbon::now()->toDateTimeString();
             $sale->save();
 
@@ -57,16 +66,7 @@ class SaleRepository implements ISaleRepository
     public function addProductsToSale(int $id, array $products): Sale|SalesNotFound
     {
         try {
-            $sale   = Sale::query()->find($id)->first();
-            $amount = 0;
-
-            foreach ($products as $product) {
-                $sale->products = Arr::add($sale->products, count($sale->products), $product);
-                $amount += $product['price'] * $product['amount'];
-            }
-            $sale->amount = $amount;
-            $sale->save();
-
+            $sale = Sale::query()->find($id)->first();
             return $sale;
         } catch (Exception) {
             return new SalesNotFound('Sale not found');

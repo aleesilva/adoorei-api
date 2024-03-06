@@ -8,7 +8,6 @@ type Query {
 }
 
 
-
 type Mutation {
     "Creates a new Sale"
     createSale(input: [CreateSaleInput!]!): Sale!
@@ -32,10 +31,27 @@ type Products  {
 type Sale {
     id: ID!
     amount: Float!
-    products: [Products!]!
+    products: [SaleProducts!]!
 }
 
-input CreateSaleInput {
-    product_id: [ID!]!
-    quantity: [Int!]!
+type SalesProductPivot {
+    quantity: Int
 }
+
+type SaleProducts {
+    id: ID!
+    name: String!
+    description: String!
+    price: Float!
+    pivot: SalesProductPivot
+}
+
+
+input CreateSaleInput {
+    products: [SaleInput!]!
+}
+input SaleInput {
+   id: ID!
+   quantity: Int!
+}
+

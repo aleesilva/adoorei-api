@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Product\ListProductsController;
+use App\Http\Controllers\Sale\CreateSaleController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,4 +15,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/products', ListProductsController::class);
+Route::get('products', ListProductsController::class);
+Route::post('sales', CreateSaleController::class);

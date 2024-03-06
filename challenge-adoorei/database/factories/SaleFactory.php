@@ -18,18 +18,14 @@ class SaleFactory extends Factory
     {
         return [
             'amount'   => 300_00,
-            'products' => [
+            'sale_products_id' => [
                 [
                     'id'     => 1,
-                    'name'   => 'Celular 1',
-                    'price'  => 100_00,
-                    'amount' => 1,
+                    'quantity' => 1,
                 ],
                 [
                     'id'     => 2,
-                    'name'   => 'Celular 3',
-                    'price'  => 200_00,
-                    'amount' => 2,
+                    'quantity' => 2,
                 ],
             ],
         ];

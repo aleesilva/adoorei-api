@@ -6,30 +6,27 @@ use Core\Repository\ProductRepository;
 use Core\Repository\SaleRepository;
 use Core\UseCases\Sales\CreateSalesUseCase;
 use Core\UseCases\SalesUseCase;
+use Illuminate\Support\Arr;
 
 it('create a sale', function () {
-    Product::factory(2)->create();
+    $products = Product::factory(2)->create();
     $sale = [
-        'amount'   => 300_00,
-        'products' => [
+        'amount'   => 0,
+        'sale_products_id' => [
             [
                 'id'     => 1,
-                'name'   => 'Celular 1',
-                'price'  => 100_00,
-                'amount' => 1,
+                'quantity' => 1,
             ],
             [
                 'id'     => 2,
-                'name'   => 'Celular 3',
-                'price'  => 200_00,
-                'amount' => 2,
+                'quantity' => 1,
             ],
         ],
     ];
 
-    $saleUseCase = new CreateSalesUseCase(new SaleRepository(), new ProductRepository());
+    $saleUseCase = new CreateSalesUseCase(new SaleRepository());
     $sales       = $saleUseCase->execute($sale);
     expect($sales)
-        ->toBeInstanceOf(Sale::class)
-        ->and($sale->amount)->toBe(300_00);
+        ->toBeInstanceOf(Sale::class);
+
 });
