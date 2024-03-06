@@ -24,6 +24,11 @@ class ListProductsController extends Controller
      *     @OA\Response(
      *     response=200,
      *     description="List of products",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="id", type="integer", format="int64" , example=1),
+     *       @OA\Property(property="name", type="string", example="Product 1"),
+     *       @OA\Property(property="price", type="number", format="float", example=10.5),
+     *     )
      *   ),
      * )
      */

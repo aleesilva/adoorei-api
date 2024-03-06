@@ -1,9 +1,12 @@
 FROM php:8.2-alpine
 
+WORKDIR /api
+
+RUN apk update && apk add bash
+
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/bin/
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
-WORKDIR /api
 
 RUN install-php-extensions pcntl sockets pdo_pgsql swoole
 

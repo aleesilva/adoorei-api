@@ -12,6 +12,8 @@ services:
       dockerfile: ./challenge-adoorei/.docker/Dockerfile
     networks:
       - adoorei-network
+    volumes:
+      - ./challenge-adoorei:/app
     ports:
       - "9002:9002"
     depends_on:
