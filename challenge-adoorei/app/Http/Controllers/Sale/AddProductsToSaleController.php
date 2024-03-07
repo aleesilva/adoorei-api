@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Sale;
 
+use App\DTOs\AddProductsToSaleDTO;
 use App\Http\Controllers\Controller;
 use Core\UseCases\SalesUseCase;
 use Exception;
@@ -21,10 +22,8 @@ class AddProductsToSaleController extends Controller
     public function __invoke(Request $request): JsonResponse
     {
         try {
-            $sale = $this->salesUseCase->addProductsToSale(
-                $request->input('id'),
-                $request->input('products')
-            );
+            $inputDTO = AddProductsToSaleDTO::fromRequest($request);
+            $sale = $this->salesUseCase->addProductsToSale($inputDTO->sale_id, $inputDTO->products);
 
             if ($sale instanceof Exception) {
                 return response()->json(['error' => $sale->getMessage()], Response::HTTP_NOT_FOUND);

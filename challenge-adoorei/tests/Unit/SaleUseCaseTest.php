@@ -1,5 +1,6 @@
 <?php
 
+use App\DTOs\CreateSaleDTO;
 use App\Models\Product;
 use App\Models\Sale;
 use Core\Repository\SaleRepository;
@@ -19,7 +20,9 @@ beforeEach(function () {
     $this->addProductsToSaleUseCase = new AddProductsToSaleUseCase(new SaleRepository());
 
     $this->products = Product::factory(3)->create();
-    $this->sale = [
+
+
+    $this->sale = CreateSaleDTO::fromArray([
         'amount' => array_sum(Arr::pluck($this->products, 'price')),
         'products' => [
             [
@@ -31,7 +34,22 @@ beforeEach(function () {
                 'quantity' => 2,
             ],
         ],
-    ];
+    ]);
+
+
+//    $this->sale = [
+//        'amount' => array_sum(Arr::pluck($this->products, 'price')),
+//        'products' => [
+//            [
+//                'id' => 1,
+//                'quantity' => 1,
+//            ],
+//            [
+//                'id' => 2,
+//                'quantity' => 2,
+//            ],
+//        ],
+//    ];
 });
 
 
@@ -49,7 +67,12 @@ describe('CreateSaleUseCase', function() {
     });
 
     it('should be not able create a sale with invalid product', function () {
-        $this->sale['products'][0]['id'] = 100;
+        $this->sale->products = [
+            [
+                'id' => 100,
+                'quantity' => 1,
+            ],
+        ];
         $sales       = $this->createSaleUseCase->execute($this->sale);
         expect($sales)
             ->toBeInstanceOf(Exception::class)

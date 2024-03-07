@@ -2,6 +2,7 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\DTOs\CreateSaleDTO;
 use Core\UseCases\SalesUseCase;
 
 final readonly class CreateSale
@@ -14,6 +15,7 @@ final readonly class CreateSale
      */
     public function __invoke(null $_, array $args)
     {
-        return $this->salesUseCase->createSale($args['input'][0]);
+        $inputDTO = CreateSaleDTO::fromArray($args['input'][0]);
+        return $this->salesUseCase->createSale($inputDTO);
     }
 }
