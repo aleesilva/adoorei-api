@@ -22,6 +22,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('products', ListProductsController::class);
 Route::post('sales', CreateSaleController::class);
 Route::get('sales', ListSalesController::class);
-Route::get('sale/{id}', FindSaleController::class);
-Route::patch('sale/cancel/{id}', CancelSaleController::class);
+Route::get('sale/{id}', FindSaleController::class)->whereNumber('id');
+Route::patch('sale/cancel/{id}', CancelSaleController::class)->whereNumber('id');
 Route::post('sale/add-products', AddProductsToSaleController::class);

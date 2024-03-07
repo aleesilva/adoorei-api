@@ -2,6 +2,7 @@
 
 namespace Core\UseCases\Sales;
 
+use App\DTOs\CreateSaleDTO;
 use App\Models\Product;
 use App\Models\Sale;
 use Core\Repository\SaleRepository;
@@ -16,18 +17,18 @@ readonly class CreateSalesUseCase
     /**
      * @throws Exception
      */
-    public function execute($sale): Exception|Sale
+    public function execute(CreateSaleDTO $sale): Exception|Sale
     {
 
-        $sale['amount'] = 0;
+        $sale->amount = 0;
 
-        foreach ($sale['products'] as $product) {
+        foreach ($sale->products as $product) {
             $p = Product::query()->find($product['id']);
             if (!$p) {
                 return new Exception('Product not found');
             }
-            $sale['amount'] += $p->price * $product['quantity'];
+            $sale->amount += $p->price * $product['quantity'];
         }
-        return $this->saleRepository->createSale($sale);
+        return $this->saleRepository->createSale((array)$sale);
     }
 }

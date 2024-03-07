@@ -2,6 +2,8 @@
 
 namespace Core\UseCases;
 
+use App\DTOs\AddProductsToSaleDTO;
+use App\DTOs\CreateSaleDTO;
 use App\Exceptions\SaleCanceledError;
 use App\Exceptions\SalesNotFound;
 use App\Models\Sale;
@@ -28,7 +30,7 @@ readonly class SalesUseCase
     /**
      * @throws Exception
      */
-    public function createSale($sale): Exception|Sale
+    public function createSale(CreateSaleDTO $sale): Exception|Sale
     {
         return $this->createSalesUseCase->execute($sale);
     }

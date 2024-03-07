@@ -19,7 +19,6 @@ final readonly class AddProductsToSale
     {
 
         try {
-
             $sale = $this->salesUseCase->addProductsToSale(
                 $args['saleId'],
                 $args['input'][0]

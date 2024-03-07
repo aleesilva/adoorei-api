@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers\Sale;
 
-use App\Exceptions\SalesNotFound;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SaleOutput;
 use Core\UseCases\SalesUseCase;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use function Pest\Laravel\instance;
 
 class FindSaleController extends Controller
 {
@@ -22,7 +20,7 @@ class FindSaleController extends Controller
     public function __invoke(int $id): JsonResponse
     {
         try {
-            if (empty($id)) {
+            if (empty($id) ) {
                 return response()->json(['error' => 'Id is required'], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
 

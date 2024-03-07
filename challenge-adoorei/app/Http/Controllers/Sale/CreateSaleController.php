@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Sale;
 
+use App\DTOs\CreateSaleDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Sale\CreateSaleInput;
 use App\Http\Resources\SaleOutput;
@@ -48,7 +49,9 @@ class CreateSaleController extends Controller
     public function __invoke(Request $request): SaleOutput | JsonResponse
     {
         try {
-            $sale = $this->salesUseCase->createSale($request->all());
+
+            $inputDTO = CreateSaleDTO::fromRequest($request);
+            $sale = $this->salesUseCase->createSale($inputDTO);
             return new SaleOutput($sale);
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 400);
