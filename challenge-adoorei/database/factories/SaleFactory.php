@@ -2,7 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Arr;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Sale>
@@ -16,20 +18,19 @@ class SaleFactory extends Factory
      */
     public function definition(): array
     {
+
+        $products = Product::factory(2)->create();
+
         return [
-            'amount'   => 300_00,
-            'products' => [
+            'amount'   => array_sum(Arr::pluck($products, 'price')),
+            'sale_products_id' => [
                 [
                     'id'     => 1,
-                    'name'   => 'Celular 1',
-                    'price'  => 100_00,
-                    'amount' => 1,
+                    'quantity' => 1,
                 ],
                 [
                     'id'     => 2,
-                    'name'   => 'Celular 3',
-                    'price'  => 200_00,
-                    'amount' => 2,
+                    'quantity' => 1,
                 ],
             ],
         ];

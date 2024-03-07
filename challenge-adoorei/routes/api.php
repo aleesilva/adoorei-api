@@ -1,6 +1,11 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Product\ListProductsController;
+use App\Http\Controllers\Sale\AddProductsToSaleController;
+use App\Http\Controllers\Sale\CancelSaleController;
+use App\Http\Controllers\Sale\CreateSaleController;
+use App\Http\Controllers\Sale\FindSaleController;
+use App\Http\Controllers\Sale\ListSalesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +19,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::get('products', ListProductsController::class);
+Route::post('sales', CreateSaleController::class);
+Route::get('sales', ListSalesController::class);
+Route::get('sale/{id}', FindSaleController::class);
+Route::patch('sale/cancel/{id}', CancelSaleController::class);
+Route::post('sale/add-products', AddProductsToSaleController::class);
