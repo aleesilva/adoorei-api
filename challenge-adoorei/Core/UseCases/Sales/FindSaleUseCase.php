@@ -12,7 +12,10 @@ readonly class FindSaleUseCase
     {
     }
 
-    public function execute(int $id): Sale | SalesNotFound
+    /**
+     * @throws SalesNotFound
+     */
+    public function execute(int $id): Sale|SalesNotFound
     {
         return $this->saleRepository->findSaleById($id);
     }

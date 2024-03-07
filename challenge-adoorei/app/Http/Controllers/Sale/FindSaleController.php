@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Sale;
 
+use App\Exceptions\SalesNotFound;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\SaleOutput;
 use Core\UseCases\SalesUseCase;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use function Pest\Laravel\instance;
 
 class FindSaleController extends Controller
 {
@@ -24,11 +26,14 @@ class FindSaleController extends Controller
                 return response()->json(['error' => 'Id is required'], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
 
+            $sale = $this->salesUseCase->findSale($id);
+            if ($sale instanceof Exception) {
+                return response()->json(['error' => $sale->getMessage()], Response::HTTP_NOT_FOUND);
+            }
             return response()->json(
-                new SaleOutput($this->salesUseCase->findSale($id))
-                , 200);
+                new SaleOutput($sale));
         } catch (Exception $e) {
-            return response()->json(['error' => $e->getMessage()], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response()->json(['error' => 'Internal server error'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

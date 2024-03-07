@@ -8,6 +8,7 @@ use Core\UseCases\SalesUseCase;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ListSalesController extends Controller
 {
@@ -22,10 +23,15 @@ class ListSalesController extends Controller
     public function __invoke(Request $request): JsonResponse
     {
         try {
-            return response()->json(
-                ListSalesOutput::collection($this->salesUseCase->listSales()),
-            );
-        }catch (Exception $e) {
+
+            $sales = $this->salesUseCase->listSales();
+
+            if ($sales instanceof Exception) {
+                return response()->json(['error' => $sales->getMessage()], Response::HTTP_NOT_FOUND);
+            }
+
+            return response()->json(ListSalesOutput::collection($sales));
+        } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }

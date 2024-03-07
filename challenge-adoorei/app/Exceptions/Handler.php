@@ -3,6 +3,8 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -25,6 +27,15 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+
+        $this->reportable(function (SaleCanceledError | SalesNotFound $e) {
+            return response()->json(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
+        });
+
+
+        $this->renderable(function (SalesNotFound | SaleCanceledError $e) {
+            return response()->json(['error' => $e->getMessage()], Response::HTTP_NOT_FOUND);
         });
     }
 }

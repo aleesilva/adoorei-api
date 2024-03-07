@@ -18,5 +18,5 @@ interface ISaleRepository
 
     public function cancelSale(int $id): Sale|SaleCanceledError;
 
-    public function addProductsToSale(int $id, array $products): Sale|SalesNotFound;
+    public function addProductsToSale(int $id, array $products, float $newAmount): Sale|SalesNotFound;
 }

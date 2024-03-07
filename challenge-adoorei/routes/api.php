@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Product\ListProductsController;
+use App\Http\Controllers\Sale\AddProductsToSaleController;
 use App\Http\Controllers\Sale\CancelSaleController;
 use App\Http\Controllers\Sale\CreateSaleController;
 use App\Http\Controllers\Sale\FindSaleController;
@@ -23,3 +24,4 @@ Route::post('sales', CreateSaleController::class);
 Route::get('sales', ListSalesController::class);
 Route::get('sale/{id}', FindSaleController::class);
 Route::patch('sale/cancel/{id}', CancelSaleController::class);
+Route::post('sale/add-products', AddProductsToSaleController::class);
