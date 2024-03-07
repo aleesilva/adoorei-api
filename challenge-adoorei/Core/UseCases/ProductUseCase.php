@@ -5,10 +5,10 @@ namespace Core\UseCases;
 use Core\UseCases\Products\ListProductsUseCase;
 use Illuminate\Database\Eloquent\Collection;
 
-class ProductUseCase
+readonly class ProductUseCase
 {
     public function __construct(
-        private readonly ListProductsUseCase $listProductsUseCase,
+        private ListProductsUseCase $listProductsUseCase,
     ) {
     }
 

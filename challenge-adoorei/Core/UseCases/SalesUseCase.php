@@ -4,6 +4,7 @@ namespace Core\UseCases;
 
 use App\Exceptions\SalesNotFound;
 use App\Models\Sale;
+use Core\UseCases\Sales\CancelSaleUseCase;
 use Core\UseCases\Sales\CreateSalesUseCase;
 use Core\UseCases\Sales\FindSaleUseCase;
 use Core\UseCases\Sales\ListSalesUseCase;
@@ -15,7 +16,8 @@ readonly class SalesUseCase
     public function __construct(
         private CreateSalesUseCase $createSalesUseCase,
         private ListSalesUseCase   $listSalesUseCase,
-        private FindSaleUseCase    $findSaleUseCase
+        private FindSaleUseCase    $findSaleUseCase,
+        private CancelSaleUseCase  $cancelSaleUseCase
     )
     {
     }
@@ -33,5 +35,10 @@ readonly class SalesUseCase
     public function findSale(int $id): Sale|SalesNotFound
     {
         return $this->findSaleUseCase->execute($id);
+    }
+
+    public function cancelSale(int $id): Sale|SalesNotFound
+    {
+        return $this->cancelSaleUseCase->execute($id);
     }
 }
