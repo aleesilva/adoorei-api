@@ -28,7 +28,8 @@ class SaleRepository implements ISaleRepository
             }
 
             return Sale::query()->get()->last();
-        } catch (Exception | ModelNotFoundException) {
+        } catch (Exception | ModelNotFoundException $e) {
+            dd($e->getMessage());
             throw new Exception('Invalid data');
         }
     }
@@ -52,11 +53,12 @@ class SaleRepository implements ISaleRepository
     {
         try {
             $sale = Sale::query()->find($id);
-            if (!$sale)
+
+            if (empty($sale))
                 return new SalesNotFound('Sale not found !');
 
-            return $sale->first;
-        } catch (Exception | ModelNotFoundException) {
+            return $sale->first();
+        } catch (Exception | ModelNotFoundException $e) {
             throw new SalesNotFound('Sale not found !');
         }
     }
@@ -71,7 +73,7 @@ class SaleRepository implements ISaleRepository
             if (!$sale)
                 return new SaleCanceledError('Sale not found');
 
-            $sale = $sale->first;
+            $sale = $sale->first();
             $sale->cancelled_at = Carbon::now()->toDateTimeString();
             $sale->save();
 
@@ -92,7 +94,7 @@ class SaleRepository implements ISaleRepository
             if (!$sale)
                 return new SalesNotFound('Sale not found');
 
-            $sale = $sale->first;
+            $sale = $sale->first();
 
             $sale->amount += $newAmount;
 

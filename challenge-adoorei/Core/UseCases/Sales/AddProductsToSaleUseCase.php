@@ -8,7 +8,7 @@ use App\Models\Sale;
 use Core\Repository\SaleRepository;
 use Exception;
 
-class AddProductsToSaleUseCase
+readonly class AddProductsToSaleUseCase
 {
 
     public function __construct(private SaleRepository $saleRepository)
