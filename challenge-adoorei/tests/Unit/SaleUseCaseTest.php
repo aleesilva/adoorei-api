@@ -124,9 +124,11 @@ describe('AddProductsToSaleUseCase', function (){
     it('should be able add products to a sale', function () {
         $this->createSaleUseCase->execute($this->sale);
         $sales = $this->addProductsToSaleUseCase->execute(1, [
-            [
-                'id' => 3,
-                'quantity' => 1,
+            'products' => [
+                [
+                    'id' => 1,
+                    'quantity' => 1,
+                ],
             ],
         ]);
         expect($sales->products)
@@ -135,9 +137,11 @@ describe('AddProductsToSaleUseCase', function (){
 
     it('should be not able add products to a sale with invalid sale id', function () {
         $sales = $this->addProductsToSaleUseCase->execute(100, [
-            [
-                'id' => 3,
-                'quantity' => 1,
+            'products' => [
+                [
+                    'id' => 1,
+                    'quantity' => 1,
+                ],
             ],
         ]);
         expect($sales)

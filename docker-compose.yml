@@ -15,7 +15,7 @@ services:
     volumes:
       - ./challenge-adoorei:/app
     ports:
-      - "9002:9002"
+      - "9090:9090"
     depends_on:
         - database
 

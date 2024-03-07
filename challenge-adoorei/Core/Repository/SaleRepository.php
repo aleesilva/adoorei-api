@@ -9,6 +9,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class SaleRepository implements ISaleRepository
 {
@@ -28,8 +29,7 @@ class SaleRepository implements ISaleRepository
             }
 
             return Sale::query()->get()->last();
-        } catch (Exception | ModelNotFoundException $e) {
-            dd($e->getMessage());
+        } catch (Exception|ModelNotFoundException) {
             throw new Exception('Invalid data');
         }
     }
@@ -41,7 +41,7 @@ class SaleRepository implements ISaleRepository
     {
         try {
             return Sale::all();
-        } catch (Exception| ModelNotFoundException) {
+        } catch (Exception|ModelNotFoundException) {
             throw new SalesNotFound('Sales not found');
         }
     }
@@ -58,7 +58,7 @@ class SaleRepository implements ISaleRepository
                 return new SalesNotFound('Sale not found !');
 
             return $sale->first();
-        } catch (Exception | ModelNotFoundException $e) {
+        } catch (Exception|ModelNotFoundException $e) {
             throw new SalesNotFound('Sale not found !');
         }
     }
@@ -78,7 +78,7 @@ class SaleRepository implements ISaleRepository
             $sale->save();
 
             return $sale;
-        } catch (Exception | ModelNotFoundException) {
+        } catch (Exception|ModelNotFoundException) {
             throw  new SaleCanceledError('Sale cannot be canceled');
         }
     }
@@ -91,20 +91,19 @@ class SaleRepository implements ISaleRepository
         try {
             $sale = Sale::query()->find($id);
 
-            if (!$sale)
+            if (empty($sale)) {
                 return new SalesNotFound('Sale not found');
+            }
 
             $sale = $sale->first();
 
             $sale->amount += $newAmount;
-
-            foreach ($products as $product) {
+            foreach ($products['products'] as $product) {
                 $sale->products()->attach($product['id'], array('quantity' => $product['quantity']));
             }
-
             $sale->save();
             return $sale;
-        } catch (Exception| ModelNotFoundException) {
+        } catch (Exception|ModelNotFoundException) {
             throw new SalesNotFound('Sale not found');
         }
     }

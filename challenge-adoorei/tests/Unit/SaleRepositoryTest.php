@@ -114,11 +114,12 @@ describe('Testing a Sale Repository', function () {
         $saleRepository = new SaleRepository();
         $testSale = $saleRepository->createSale($this->sale);
         $sale = $saleRepository->addProductsToSale($testSale->id, [
-            'products' =>
+            'products' => [
                 [
-                    'id' => 3,
+                    'id' => 1,
                     'quantity' => 1,
                 ],
+            ],
         ], Product::query()->find(3)->first()->price);
         expect($sale)
             ->toBeInstanceOf(Sale::class)
