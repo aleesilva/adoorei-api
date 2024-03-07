@@ -27,7 +27,6 @@ class SaleRepository implements ISaleRepository
 
             return Sale::query()->get()->last();
         } catch (Exception $e) {
-            dd($e->getMessage());
             return new Exception('Invalid data');
         }
     }

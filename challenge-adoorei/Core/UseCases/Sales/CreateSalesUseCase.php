@@ -4,11 +4,8 @@ namespace Core\UseCases\Sales;
 
 use App\Models\Product;
 use App\Models\Sale;
-use Core\Repository\ProductRepository;
 use Core\Repository\SaleRepository;
 use Exception;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Log;
 
 readonly class CreateSalesUseCase
 {
