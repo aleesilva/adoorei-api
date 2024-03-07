@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Product\ListProductsController;
 use App\Http\Controllers\Sale\CreateSaleController;
+use App\Http\Controllers\Sale\FindSaleController;
 use App\Http\Controllers\Sale\ListSalesController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,3 +20,4 @@ use Illuminate\Support\Facades\Route;
 Route::get('products', ListProductsController::class);
 Route::post('sales', CreateSaleController::class);
 Route::get('sales', ListSalesController::class);
+Route::get('sales/{id}', FindSaleController::class);
