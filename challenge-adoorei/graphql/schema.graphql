@@ -1,0 +1,73 @@
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+"Indicates what fields are available at the top level of a query operation."
+type Query {
+    "Get the list of products available in the store."
+    listProducts: [Products!]!
+    "Get the list of sales."
+    listSales: [Sale!]!
+    "Get a specific sale."
+    findSale(saleId: Int!): Sale!
+}
+
+
+type Mutation {
+    "Creates a new Sale"
+    createSale(input: [CreateSaleInput!]!): Sale!
+    "Cancel a specific sale."
+    cancelSale(saleId: Int!): Sale!
+    "Add new products to specific sale."
+    addProductsToSale(saleId: Int!, input: [CreateSaleInput!]!) : Sale!
+}
+
+"Products available in the store."
+type Products  {
+    "The ID of the product."
+    id: ID!
+    "The name of the product."
+    name: String!
+    "The description of the product."
+    description: String!
+    "The price of the product."
+    price: Float!
+}
+
+type Sale {
+    "The ID of the sale."
+    id: ID!
+    "The amount of the sale."
+    amount: Float!
+    "The products of the sale."
+    products: [SaleProducts!]!
+}
+
+type SalesProductPivot {
+    "Quantity of the product in the sale."
+    quantity: Int
+}
+
+type SaleProducts {
+    "The of the sale product."
+    id: ID!
+    "The name of the sale product."
+    name: String!
+    "The description of the sale product."
+    description: String!
+    "The price of the sale product."
+    price: Float!
+    "The pivot of the sale product quantity."
+    pivot: SalesProductPivot
+}
+
+input CreateSaleInput {
+    products: [SaleInput!]!
+}
+
+input SaleInput {
+    "Id of the product."
+    id: ID!
+    "Quantity of the product."
+    quantity: Int!
+}
+

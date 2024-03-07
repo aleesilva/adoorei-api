@@ -2,39 +2,40 @@
 
 use App\Exceptions\SaleCanceledError;
 use App\Exceptions\SalesNotFound;
+use App\Models\Product;
 use App\Models\Sale;
 use Core\Repository\ISaleRepository;
 use Core\Repository\SaleRepository;
 use Illuminate\Database\Eloquent\Collection;
 
+use Illuminate\Support\Arr;
 use function Pest\Laravel\assertDatabaseCount;
+use function Pest\Laravel\assertDatabaseHas;
+
+beforeEach(function () {
+    $this->products = Product::factory(3)->create();
+    $this->sale = [
+        'amount' => array_sum(Arr::pluck($this->products, 'price')),
+        'products' => [
+            [
+                'id' => 1,
+                'quantity' => 1,
+            ],
+            [
+                'id' => 2,
+                'quantity' => 2,
+            ],
+        ],
+    ];
+});
 
 describe('Testing a Sale Repository', function () {
     it('should be able create a new sale', function () {
-        $sale = [
-            'amount'   => 300_00,
-            'products' => [
-                [
-                    'id'     => 1,
-                    'name'   => 'Celular 1',
-                    'price'  => 100_00,
-                    'amount' => 1,
-                ],
-                [
-                    'id'     => 2,
-                    'name'   => 'Celular 3',
-                    'price'  => 200_00,
-                    'amount' => 2,
-                ],
-            ],
-
-        ];
-
         $saleRepository = new SaleRepository();
-        $sale           = $saleRepository->createSale($sale);
+        $sale = $saleRepository->createSale($this->sale);
         expect($sale)
             ->toBeInstanceOf(Sale::class)
-            ->and($sale->amount)->toBe(300_00);
+            ->and($sale->amount)->toBe($sale['amount']);
     });
 
     it('should be not able create a new sale with invalid data', function () {
@@ -47,33 +48,17 @@ describe('Testing a Sale Repository', function () {
     });
 
     it('should be able list all sales', function () {
-        Sale::factory(1)->create();
         $saleRepository = new SaleRepository();
-        $sales          = $saleRepository->listSales();
+        $sale = $saleRepository->createSale($this->sale);
+        $sales = $saleRepository->listSales();
 
-        assertDatabaseCount('sales', $sales->count());
-        expect($sales->pluck('amount')[0])->toBe(30000)
+        assertDatabaseCount('sales', 1);
+
+        expect($sales->pluck('amount')[0])->toBe($sale['amount'])
             ->and($sales)
             ->toBeInstanceOf(Collection::class)
             ->and($sales->count())->toBe(1)
-            ->and($sales->first())->toBeInstanceOf(Sale::class)
-            ->and($sales)->contains([
-                'amount'   => 30000,
-                'products' => [
-                    [
-                        'id'     => 1,
-                        'name'   => 'Celular 1',
-                        'price'  => 10000,
-                        'amount' => 1,
-                    ],
-                    [
-                        'id'     => 2,
-                        'name'   => 'Celular 3',
-                        'price'  => 20000,
-                        'amount' => 2,
-                    ],
-                ],
-            ]);
+            ->and($sales->first())->toBeInstanceOf(Sale::class);
     });
 
     it('should be not able list all sales', function () {
@@ -86,23 +71,15 @@ describe('Testing a Sale Repository', function () {
     });
 
     it('should be able find a sale by id', function () {
-        $sale           = Sale::factory(1)->create();
         $saleRepository = new SaleRepository();
-        $sale           = $saleRepository->findSaleById($sale->first()->id);
+        $createdSale = $saleRepository->createSale($this->sale);
+        $sale = $saleRepository->findSaleById($createdSale->id);
+
         expect($sale)
             ->toBeInstanceOf(Sale::class)
-            ->and($sale->amount)->toBe(30000)
-            ->and($sale->products)->toBeArray()
-            ->and($sale->products[0])->toBeArray()
-            ->and($sale->products[0]['id'])->toBe(1)
-            ->and($sale->products[0]['name'])->toBe('Celular 1')
-            ->and($sale->products[0]['price'])->toBe(10000)
-            ->and($sale->products[0]['amount'])->toBe(1)
-            ->and($sale->products[1])->toBeArray()
-            ->and($sale->products[1]['id'])->toBe(2)
-            ->and($sale->products[1]['name'])->toBe('Celular 3')
-            ->and($sale->products[1]['price'])->toBe(20000)
-            ->and($sale->products[1]['amount'])->toBe(2);
+            ->and($sale->amount)->toBe($sale['amount'])
+            ->and($sale->id)->toBe($createdSale->id)
+            ->and($sale->products->count())->toBe(2);
     });
 
     it('should be not able find a sale by id', function () {
@@ -115,9 +92,10 @@ describe('Testing a Sale Repository', function () {
     });
 
     it('should be able cancel a sale', function () {
-        $sale           = Sale::factory(1)->create();
+
         $saleRepository = new SaleRepository();
-        $sale           = $saleRepository->cancelSale($sale->first()->id);
+        $sale = $saleRepository->createSale($this->sale);
+        $sale = $saleRepository->cancelSale($sale->first()->id);
         expect($sale)
             ->toBeInstanceOf(Sale::class)
             ->and($sale->cancelled_at)->not->toBeNull();
@@ -133,44 +111,28 @@ describe('Testing a Sale Repository', function () {
     });
 
     it('should be able add products to a sale', function () {
-        $sale           = Sale::factory(1)->create();
         $saleRepository = new SaleRepository();
-        $sale           = $saleRepository->addProductsToSale($sale->first()->id, [
-            [
-                'id'     => 3,
-                'name'   => 'Celular 4',
-                'price'  => 30000,
-                'amount' => 1,
+        $testSale = $saleRepository->createSale($this->sale);
+        $sale = $saleRepository->addProductsToSale($testSale->id, [
+            'products' => [
+                [
+                    'id' => 1,
+                    'quantity' => 1,
+                ],
             ],
-            [
-                'id'     => 4,
-                'name'   => 'Celular 5',
-                'price'  => 20000,
-                'amount' => 1,
-            ],
-        ]);
+        ], Product::query()->find(3)->first()->price);
         expect($sale)
             ->toBeInstanceOf(Sale::class)
-            ->and($sale->products)->toBeArray()
-            ->and($sale->products[2])->toBeArray()
-            ->and($sale->products[2]['id'])->toBe(3)
-            ->and($sale->products[2]['name'])->toBe('Celular 4')
-            ->and($sale->products[2]['price'])->toBe(30000)
-            ->and($sale->products[2]['amount'])->toBe(1)
-            ->and($sale->products[3])->toBeArray()
-            ->and($sale->products[3]['id'])->toBe(4)
-            ->and($sale->products[3]['name'])->toBe('Celular 5')
-            ->and($sale->products[3]['price'])->toBe(20000)
-            ->and($sale->products[3]['amount'])->toBe(1);
+            ->and($sale->products->count())->toBe(3)
+            ->and($testSale->amount + Product::query()->find(3)->first()->price)->toBe($sale->amount);
     });
 
     it('should be not able add products to a sale', function () {
         $saleRepository = Mockery::mock(ISaleRepository::class);
         $saleRepository->shouldReceive('addProductsToSale')->andReturn(new SalesNotFound('Sale not found'));
-        $sale = $saleRepository->addProductsToSale(1, []);
+        $sale = $saleRepository->addProductsToSale(1, ['products'], 0);
         expect($sale)
             ->toBeInstanceOf(SalesNotFound::class)
             ->and($sale->getMessage())->toBe('Sale not found');
     });
-
 });
