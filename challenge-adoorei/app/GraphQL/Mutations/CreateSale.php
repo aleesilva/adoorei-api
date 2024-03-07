@@ -3,10 +3,6 @@
 namespace App\GraphQL\Mutations;
 
 use Core\UseCases\SalesUseCase;
-use Exception;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 final readonly class CreateSale
 {
