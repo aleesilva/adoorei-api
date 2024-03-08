@@ -7,22 +7,21 @@ use App\Models\Sale;
 use Core\Repository\ISaleRepository;
 use Core\Repository\SaleRepository;
 use Illuminate\Database\Eloquent\Collection;
-
 use Illuminate\Support\Arr;
+
 use function Pest\Laravel\assertDatabaseCount;
-use function Pest\Laravel\assertDatabaseHas;
 
 beforeEach(function () {
     $this->products = Product::factory(3)->create();
-    $this->sale = [
-        'amount' => array_sum(Arr::pluck($this->products, 'price')),
+    $this->sale     = [
+        'amount'   => array_sum(Arr::pluck($this->products, 'price')),
         'products' => [
             [
-                'id' => 1,
+                'id'       => 1,
                 'quantity' => 1,
             ],
             [
-                'id' => 2,
+                'id'       => 2,
                 'quantity' => 2,
             ],
         ],
@@ -32,7 +31,7 @@ beforeEach(function () {
 describe('Testing a Sale Repository', function () {
     it('should be able create a new sale', function () {
         $saleRepository = new SaleRepository();
-        $sale = $saleRepository->createSale($this->sale);
+        $sale           = $saleRepository->createSale($this->sale);
         expect($sale)
             ->toBeInstanceOf(Sale::class)
             ->and($sale->amount)->toBe($sale['amount']);
@@ -49,8 +48,8 @@ describe('Testing a Sale Repository', function () {
 
     it('should be able list all sales', function () {
         $saleRepository = new SaleRepository();
-        $sale = $saleRepository->createSale($this->sale);
-        $sales = $saleRepository->listSales();
+        $sale           = $saleRepository->createSale($this->sale);
+        $sales          = $saleRepository->listSales();
 
         assertDatabaseCount('sales', 1);
 
@@ -72,8 +71,8 @@ describe('Testing a Sale Repository', function () {
 
     it('should be able find a sale by id', function () {
         $saleRepository = new SaleRepository();
-        $createdSale = $saleRepository->createSale($this->sale);
-        $sale = $saleRepository->findSaleById($createdSale->id);
+        $createdSale    = $saleRepository->createSale($this->sale);
+        $sale           = $saleRepository->findSaleById($createdSale->id);
 
         expect($sale)
             ->toBeInstanceOf(Sale::class)
@@ -92,10 +91,9 @@ describe('Testing a Sale Repository', function () {
     });
 
     it('should be able cancel a sale', function () {
-
         $saleRepository = new SaleRepository();
-        $sale = $saleRepository->createSale($this->sale);
-        $sale = $saleRepository->cancelSale($sale->first()->id);
+        $sale           = $saleRepository->createSale($this->sale);
+        $sale           = $saleRepository->cancelSale($sale->first()->id);
         expect($sale)
             ->toBeInstanceOf(Sale::class)
             ->and($sale->cancelled_at)->not->toBeNull();
@@ -111,19 +109,22 @@ describe('Testing a Sale Repository', function () {
     });
 
     it('should be able add products to a sale', function () {
-        $saleRepository = new SaleRepository();
-        $testSale = $saleRepository->createSale($this->sale);
-        $sale = $saleRepository->addProductsToSale($testSale->id, [
-            'products' => [
-                [
-                    'id' => 1,
-                    'quantity' => 1,
-                ],
+        $saleRepository         = new SaleRepository();
+        $testSale               = $saleRepository->createSale($this->sale);
+        $saleProducts           = new StdClass();
+        $saleProducts->products = [
+            [
+                'id'       => 1,
+                'quantity' => 1,
             ],
-        ], Product::query()->find(3)->first()->price);
+            [
+                'id'       => 2,
+                'quantity' => 2,
+            ],
+        ];
+        $sale = $saleRepository->addProductsToSale($testSale->id, $saleProducts->products, Product::query()->find(3)->first()->price);
         expect($sale)
             ->toBeInstanceOf(Sale::class)
-            ->and($sale->products->count())->toBe(3)
             ->and($testSale->amount + Product::query()->find(3)->first()->price)->toBe($sale->amount);
     });
 

@@ -1,11 +1,12 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
+use App\DTOs\AddProductsToSaleDTO;
 use Core\UseCases\SalesUseCase;
 use Exception;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Log;
 
 final readonly class AddProductsToSale
 {
@@ -13,22 +14,16 @@ final readonly class AddProductsToSale
     {
     }
 
-
     /** @param array{} $args */
     public function __invoke(null $_, array $args)
     {
-
         try {
-            $sale = $this->salesUseCase->addProductsToSale(
-                $args['saleId'],
-                $args['input'][0]
-            );
+            $input['sale_id']  = $args['saleId'];
+            $input['products'] = $args['input'][0]['products'];
 
-            if ($sale instanceof Exception) {
-                return ['error' => $sale->getMessage()];
-            }
+            $inputDTO = AddProductsToSaleDTO::fromArray($input);
 
-            return $sale;
+            return $this->salesUseCase->addProductsToSale($inputDTO);
         } catch (Exception $e) {
             return ['error' => $e->getMessage()];
         }

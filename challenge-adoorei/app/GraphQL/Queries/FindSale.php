@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\GraphQL\Queries;
 
@@ -22,10 +24,12 @@ final readonly class FindSale
             }
 
             $sale = $this->salesUseCase->findSale($args['saleId']);
+
             if ($sale instanceof Exception) {
-              return ['error' => $sale->getMessage()];
+                return ['error' => $sale->getMessage()];
             }
-           return $sale;
+
+            return $sale;
         } catch (Exception) {
             return ['error' => 'Internal server error'];
         }

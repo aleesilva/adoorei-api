@@ -12,11 +12,10 @@ readonly class ListSalesUseCase
     {
     }
 
-
     /**
      * @throws SalesNotFound
      */
-    public function execute(): Collection | SalesNotFound
+    public function execute(): Collection|SalesNotFound
     {
         return $this->saleRepository->listSales();
     }

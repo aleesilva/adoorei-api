@@ -7,6 +7,7 @@ use App\Http\Resources\SaleOutput;
 use Core\UseCases\SalesUseCase;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use OpenApi\Annotations as OA;
 use Symfony\Component\HttpFoundation\Response;
 
 class CancelSaleController extends Controller
@@ -16,7 +17,26 @@ class CancelSaleController extends Controller
     }
 
     /**
-     * Handle the incoming request.
+     * @OA\Patch(
+     *     path="/api/sale/cancel/{id}",
+     *     tags={"Sales"},
+     *     summary="Cancel a sale",
+     *     description="Cancel a especific sale",
+     *
+     *     @OA\Parameter(
+     *     name="id",
+     *     in="path",
+     *     required=true,
+     *     description="Sale id",
+     *     ),
+     *
+     *     @OA\Response(
+     *     response=200,
+     *     description="Sale canceled",
+     *
+     *     @OA\JsonContent(ref="#/components/schemas/ListSales",)
+     * ),
+     * ),
      */
     public function __invoke(int $id): JsonResponse
     {
@@ -28,7 +48,7 @@ class CancelSaleController extends Controller
             }
 
             return response()->json(
-               new SaleOutput($sale),
+                new SaleOutput($sale),
                 Response::HTTP_OK
             );
         } catch (Exception $e) {

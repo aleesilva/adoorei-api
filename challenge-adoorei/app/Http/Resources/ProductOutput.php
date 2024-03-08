@@ -16,9 +16,9 @@ class ProductOutput extends JsonResource
     {
         return [
             'product_id' => $this->id,
-            'name' => $this->name,
-            'price' => $this->price,
-            'quantity' => $this->pivot->quantity
+            'name'       => $this->name,
+            'price'      => $this->price,
+            'quantity'   => $this->pivot->quantity,
         ];
     }
 }

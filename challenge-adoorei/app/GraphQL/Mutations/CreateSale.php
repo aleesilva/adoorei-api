@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
@@ -16,6 +18,7 @@ final readonly class CreateSale
     public function __invoke(null $_, array $args)
     {
         $inputDTO = CreateSaleDTO::fromArray($args['input'][0]);
+
         return $this->salesUseCase->createSale($inputDTO);
     }
 }

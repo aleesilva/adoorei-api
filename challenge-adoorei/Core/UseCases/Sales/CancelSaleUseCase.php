@@ -12,11 +12,10 @@ readonly class CancelSaleUseCase
     {
     }
 
-
     /**
      * @throws SaleCanceledError
      */
-    public function execute($id): Sale | SaleCanceledError
+    public function execute($id): Sale|SaleCanceledError
     {
         return $this->saleRepository->cancelSale($id);
     }

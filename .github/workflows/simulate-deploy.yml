@@ -1,0 +1,73 @@
+name: Simulate CI/CD Deploy
+
+on:
+  push:
+    branches:
+      - 'develop'
+      - 'feature/*'
+      - 'master'
+
+jobs:
+  phplint:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        operating-system: [ ubuntu-latest ]
+        php-versions: [ '8.2' ]
+        dependency-stability: [ 'stable' ]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+      - name: Laravel Pint
+        id: LaravelPint
+        uses: aglipanci/laravel-pint-action@0.1.0
+        with:
+          preset: laravel
+
+
+      - name: Install Dependencies
+        id: InstallDependencies
+        if: steps.vendor-cache.outputs.cache-hit != 'true'
+        run: |
+          cd challenge-adoorei 
+          composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: Copy .env
+        id: CopyEnv
+        run: |
+          cd challenge-adoorei
+          cp .env.example .env
+          cp .env .env.testing
+
+      - name: Generate key
+        id: GenerateKey
+        run: |
+          cd challenge-adoorei
+          php artisan key:generate
+
+      - name: Directory Permissions
+        id: DirectoryPermissions
+        run: |
+          cd challenge-adoorei
+          chmod -R 777 storage bootstrap/cache
+
+      - name: Run Migrations
+        id: Migrations
+        env:
+          SESSION_DRIVER: array
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ":memory:"
+        run: |
+          cd challenge-adoorei
+          php artisan migrate --env=local
+
+      - name: Execute Tests
+        id: PestPHP
+        env:
+          SESSION_DRIVER: array
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ":memory:"
+        run: |
+          cd challenge-adoorei
+          php artisan test

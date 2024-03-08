@@ -1,15 +1,14 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
-use App\Http\Resources\SaleOutput;
 use Core\UseCases\SalesUseCase;
 use Exception;
-use Symfony\Component\HttpFoundation\Response;
 
 final readonly class CancelSale
 {
-
     public function __construct(private readonly SalesUseCase $salesUseCase)
     {
     }

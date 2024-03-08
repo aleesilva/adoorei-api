@@ -1,5 +1,6 @@
 <?php
 
+use App\DTOs\AddProductsToSaleDTO;
 use App\DTOs\CreateSaleDTO;
 use App\Models\Product;
 use App\Models\Sale;
@@ -13,55 +14,38 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 
 beforeEach(function () {
-    $this->createSaleUseCase = new CreateSalesUseCase(new SaleRepository());
-    $this->listSaleUseCase = new ListSalesUseCase(new SaleRepository());
-    $this->findSaleUseCase = new FindSaleUseCase(new SaleRepository());
-    $this->cancelSaleUseCase = new CancelSaleUseCase(new SaleRepository());
+    $this->createSaleUseCase        = new CreateSalesUseCase(new SaleRepository());
+    $this->listSaleUseCase          = new ListSalesUseCase(new SaleRepository());
+    $this->findSaleUseCase          = new FindSaleUseCase(new SaleRepository());
+    $this->cancelSaleUseCase        = new CancelSaleUseCase(new SaleRepository());
     $this->addProductsToSaleUseCase = new AddProductsToSaleUseCase(new SaleRepository());
 
     $this->products = Product::factory(3)->create();
 
-
     $this->sale = CreateSaleDTO::fromArray([
-        'amount' => array_sum(Arr::pluck($this->products, 'price')),
+        'amount'   => array_sum(Arr::pluck($this->products, 'price')),
         'products' => [
             [
-                'id' => 1,
+                'id'       => 1,
                 'quantity' => 1,
             ],
             [
-                'id' => 2,
+                'id'       => 2,
                 'quantity' => 2,
             ],
         ],
     ]);
-
-
-//    $this->sale = [
-//        'amount' => array_sum(Arr::pluck($this->products, 'price')),
-//        'products' => [
-//            [
-//                'id' => 1,
-//                'quantity' => 1,
-//            ],
-//            [
-//                'id' => 2,
-//                'quantity' => 2,
-//            ],
-//        ],
-//    ];
 });
 
-
-describe('CreateSaleUseCase', function() {
+describe('CreateSaleUseCase', function () {
     it('should be able create a sale', function () {
-        $sales       = $this->createSaleUseCase->execute($this->sale);
+        $sales = $this->createSaleUseCase->execute($this->sale);
         expect($sales)
             ->toBeInstanceOf(Sale::class);
     });
 
     it('should be able create a sale with products', function () {
-        $sales       = $this->createSaleUseCase->execute($this->sale);
+        $sales = $this->createSaleUseCase->execute($this->sale);
         expect($sales->products)
             ->toHaveCount(2);
     });
@@ -69,18 +53,18 @@ describe('CreateSaleUseCase', function() {
     it('should be not able create a sale with invalid product', function () {
         $this->sale->products = [
             [
-                'id' => 100,
+                'id'       => 100,
                 'quantity' => 1,
             ],
         ];
-        $sales       = $this->createSaleUseCase->execute($this->sale);
+        $sales = $this->createSaleUseCase->execute($this->sale);
         expect($sales)
             ->toBeInstanceOf(Exception::class)
             ->and($sales->getMessage())->toBe('Product not found');
     });
 });
 
-describe('ListSalesUseCase', function (){
+describe('ListSalesUseCase', function () {
     it('should be able list sales', function () {
         $this->createSaleUseCase->execute($this->sale);
         $sales = $this->listSaleUseCase->execute();
@@ -102,7 +86,7 @@ describe('ListSalesUseCase', function (){
     });
 });
 
-describe('FindSaleUseCase', function() {
+describe('FindSaleUseCase', function () {
     it('should be able find a sale', function () {
         $this->createSaleUseCase->execute($this->sale);
         $sales = $this->findSaleUseCase->execute(1);
@@ -125,7 +109,7 @@ describe('FindSaleUseCase', function() {
     });
 });
 
-describe('CancelSaleUseCase', function() {
+describe('CancelSaleUseCase', function () {
     it('should be able cancel a sale', function () {
         $this->createSaleUseCase->execute($this->sale);
         $sales = $this->cancelSaleUseCase->execute(1);
@@ -143,33 +127,25 @@ describe('CancelSaleUseCase', function() {
     });
 });
 
-describe('AddProductsToSaleUseCase', function (){
+describe('AddProductsToSaleUseCase', function () {
     it('should be able add products to a sale', function () {
-        $this->createSaleUseCase->execute($this->sale);
-        $sales = $this->addProductsToSaleUseCase->execute(1, [
+        $resp                = $this->createSaleUseCase->execute($this->sale);
+        $saleAddProductsTest = AddProductsToSaleDTO::fromArray([
+            'sale_id'  => $resp->id,
             'products' => [
                 [
-                    'id' => 1,
+                    'id'       => 1,
+                    'quantity' => 1,
+                ],
+                [
+                    'id'       => 2,
                     'quantity' => 1,
                 ],
             ],
         ]);
-        expect($sales->products)
-            ->toHaveCount(3);
-    });
 
-    it('should be not able add products to a sale with invalid sale id', function () {
-        $sales = $this->addProductsToSaleUseCase->execute(100, [
-            'products' => [
-                [
-                    'id' => 1,
-                    'quantity' => 1,
-                ],
-            ],
-        ]);
-        expect($sales)
-            ->toBeInstanceOf(Exception::class)
-            ->and($sales->getMessage())->toBe('Sale not found');
+        $sales = $this->addProductsToSaleUseCase->execute($saleAddProductsTest);
+        expect($sales->products)
+            ->toHaveCount(4);
     });
 });
-

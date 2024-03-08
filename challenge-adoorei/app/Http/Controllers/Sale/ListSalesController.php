@@ -8,6 +8,7 @@ use Core\UseCases\SalesUseCase;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use OpenApi\Annotations as OA;
 use Symfony\Component\HttpFoundation\Response;
 
 class ListSalesController extends Controller
@@ -16,14 +17,24 @@ class ListSalesController extends Controller
     {
     }
 
-
     /**
-     * Handle the incoming request.
+     * @OA\Get(
+     *     path="/api/sales",
+     *     tags={"Sales"},
+     *     summary="List all sales",
+     *     description="List all sales",
+     *
+     *     @OA\Response(
+     *      response=200,
+     *      description="List of sales",
+     *
+     *     @OA\JsonContent(ref="#/components/schemas/ListSales",)
+     *   ),
+     *  ),
      */
     public function __invoke(Request $request): JsonResponse
     {
         try {
-
             $sales = $this->salesUseCase->listSales();
 
             if ($sales instanceof Exception) {
