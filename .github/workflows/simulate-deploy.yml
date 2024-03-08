@@ -62,7 +62,7 @@ jobs:
           cd challenge-adoorei
           php artisan migrate --env=local
 
-      - name: Execute test(Unit and Feature tests) PestPHP
+      - name: Execute Tests
         id: PestPHP
         env:
           SESSION_DRIVER: array
