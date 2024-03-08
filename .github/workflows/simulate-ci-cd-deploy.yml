@@ -14,17 +14,15 @@ jobs:
       matrix:
         php-version: ['8.2']
         dependency-stability: [ 'stable' ]
-
   steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
-    - name: Laravel Pint
-      id: pint
-      uses: aglipanci/laravel-pint@v1
-      with:
+     - name: Laravel Pint
+       id: pint
+       uses: aglipanci/laravel-pint@v1
+       with:
         preset: 'laravel'
 
     - name: Commit changes
