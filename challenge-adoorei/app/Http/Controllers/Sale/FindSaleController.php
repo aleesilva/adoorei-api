@@ -22,15 +22,18 @@ class FindSaleController extends Controller
      *     tags={"Sales"},
      *     summary="Find a sale",
      *     description="Find a sale by id",
+     *
      *     @OA\Parameter(
      *     name="id",
      *     in="path",
      *     required=true,
      *     description="Sale id",
      *     ),
+     *
      *   @OA\Response(
      *     response=200,
      *     description="Sale found",
+     *
      *     @OA\JsonContent(ref="#/components/schemas/ListSales",)
      *  ),
      * )
@@ -38,14 +41,16 @@ class FindSaleController extends Controller
     public function __invoke(int $id): JsonResponse
     {
         try {
-            if (empty($id) ) {
+            if (empty($id)) {
                 return response()->json(['error' => 'Id is required'], Response::HTTP_UNPROCESSABLE_ENTITY);
             }
 
             $sale = $this->salesUseCase->findSale($id);
+
             if ($sale instanceof Exception) {
                 return response()->json(['error' => $sale->getMessage()], Response::HTTP_NOT_FOUND);
             }
+
             return response()->json(
                 new SaleOutput($sale));
         } catch (Exception $e) {

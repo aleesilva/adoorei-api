@@ -14,30 +14,28 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 
 beforeEach(function () {
-    $this->createSaleUseCase = new CreateSalesUseCase(new SaleRepository());
-    $this->listSaleUseCase = new ListSalesUseCase(new SaleRepository());
-    $this->findSaleUseCase = new FindSaleUseCase(new SaleRepository());
-    $this->cancelSaleUseCase = new CancelSaleUseCase(new SaleRepository());
+    $this->createSaleUseCase        = new CreateSalesUseCase(new SaleRepository());
+    $this->listSaleUseCase          = new ListSalesUseCase(new SaleRepository());
+    $this->findSaleUseCase          = new FindSaleUseCase(new SaleRepository());
+    $this->cancelSaleUseCase        = new CancelSaleUseCase(new SaleRepository());
     $this->addProductsToSaleUseCase = new AddProductsToSaleUseCase(new SaleRepository());
 
     $this->products = Product::factory(3)->create();
 
-
     $this->sale = CreateSaleDTO::fromArray([
-        'amount' => array_sum(Arr::pluck($this->products, 'price')),
+        'amount'   => array_sum(Arr::pluck($this->products, 'price')),
         'products' => [
             [
-                'id' => 1,
+                'id'       => 1,
                 'quantity' => 1,
             ],
             [
-                'id' => 2,
+                'id'       => 2,
                 'quantity' => 2,
             ],
         ],
     ]);
 });
-
 
 describe('CreateSaleUseCase', function () {
     it('should be able create a sale', function () {
@@ -55,7 +53,7 @@ describe('CreateSaleUseCase', function () {
     it('should be not able create a sale with invalid product', function () {
         $this->sale->products = [
             [
-                'id' => 100,
+                'id'       => 100,
                 'quantity' => 1,
             ],
         ];
@@ -131,16 +129,16 @@ describe('CancelSaleUseCase', function () {
 
 describe('AddProductsToSaleUseCase', function () {
     it('should be able add products to a sale', function () {
-        $resp = $this->createSaleUseCase->execute($this->sale);
+        $resp                = $this->createSaleUseCase->execute($this->sale);
         $saleAddProductsTest = AddProductsToSaleDTO::fromArray([
-            'sale_id' => $resp->id,
+            'sale_id'  => $resp->id,
             'products' => [
                 [
-                    'id' => 1,
+                    'id'       => 1,
                     'quantity' => 1,
                 ],
                 [
-                    'id' => 2,
+                    'id'       => 2,
                     'quantity' => 1,
                 ],
             ],
@@ -151,4 +149,3 @@ describe('AddProductsToSaleUseCase', function () {
             ->toHaveCount(4);
     });
 });
-

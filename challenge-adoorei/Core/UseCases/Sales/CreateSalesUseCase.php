@@ -19,16 +19,17 @@ readonly class CreateSalesUseCase
      */
     public function execute(CreateSaleDTO $sale): Exception|Sale
     {
-
         $sale->amount = 0;
 
         foreach ($sale->products as $product) {
             $p = Product::query()->find($product['id']);
-            if (!$p) {
+
+            if (! $p) {
                 return new Exception('Product not found');
             }
             $sale->amount += $p->price * $product['quantity'];
         }
+
         return $this->saleRepository->createSale((array)$sale);
     }
 }

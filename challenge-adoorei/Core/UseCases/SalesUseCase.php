@@ -18,13 +18,12 @@ use Illuminate\Database\Eloquent\Collection;
 readonly class SalesUseCase
 {
     public function __construct(
-        private CreateSalesUseCase       $createSalesUseCase,
-        private ListSalesUseCase         $listSalesUseCase,
-        private FindSaleUseCase          $findSaleUseCase,
-        private CancelSaleUseCase        $cancelSaleUseCase,
+        private CreateSalesUseCase $createSalesUseCase,
+        private ListSalesUseCase $listSalesUseCase,
+        private FindSaleUseCase $findSaleUseCase,
+        private CancelSaleUseCase $cancelSaleUseCase,
         private AddProductsToSaleUseCase $addProductsToSaleUseCase
-    )
-    {
+    ) {
     }
 
     /**

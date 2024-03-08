@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\GraphQL\Mutations;
 
@@ -12,16 +14,15 @@ final readonly class AddProductsToSale
     {
     }
 
-
     /** @param array{} $args */
     public function __invoke(null $_, array $args)
     {
-
         try {
-            $input['sale_id'] = $args['saleId'];
+            $input['sale_id']  = $args['saleId'];
             $input['products'] = $args['input'][0]['products'];
 
             $inputDTO = AddProductsToSaleDTO::fromArray($input);
+
             return $this->salesUseCase->addProductsToSale($inputDTO);
         } catch (Exception $e) {
             return ['error' => $e->getMessage()];

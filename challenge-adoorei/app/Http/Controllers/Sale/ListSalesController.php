@@ -23,9 +23,11 @@ class ListSalesController extends Controller
      *     tags={"Sales"},
      *     summary="List all sales",
      *     description="List all sales",
+     *
      *     @OA\Response(
      *      response=200,
      *      description="List of sales",
+     *
      *     @OA\JsonContent(ref="#/components/schemas/ListSales",)
      *   ),
      *  ),
@@ -33,7 +35,6 @@ class ListSalesController extends Controller
     public function __invoke(Request $request): JsonResponse
     {
         try {
-
             $sales = $this->salesUseCase->listSales();
 
             if ($sales instanceof Exception) {

@@ -14,10 +14,10 @@ class ListSalesOutput extends JsonResource
      */
     public function toArray(Request $request): array
     {
-       return [
-              'sale_id' => $this->id,
-              'amount' => $this->amount,
-              'products' => ProductOutput::collection($this->products)
-       ];
+        return [
+            'sale_id'  => $this->id,
+            'amount'   => $this->amount,
+            'products' => ProductOutput::collection($this->products),
+        ];
     }
 }

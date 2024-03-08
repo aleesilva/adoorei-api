@@ -9,7 +9,6 @@ use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
 
 class SaleRepository implements ISaleRepository
 {
@@ -20,12 +19,12 @@ class SaleRepository implements ISaleRepository
     {
         try {
             $s = Sale::query()->create([
-                'amount' => $sale['amount'],
-                'cancelled_at' => null
+                'amount'       => $sale['amount'],
+                'cancelled_at' => null,
             ]);
 
             foreach ($sale['products'] as $product) {
-                $s->products()->attach($product['id'], array('quantity' => $product['quantity']));
+                $s->products()->attach($product['id'], ['quantity' => $product['quantity']]);
             }
 
             return Sale::query()->get()->last();
@@ -54,8 +53,9 @@ class SaleRepository implements ISaleRepository
         try {
             $sale = Sale::query()->find($id);
 
-            if (empty($sale))
+            if (empty($sale)) {
                 return new SalesNotFound('Sale not found !');
+            }
 
             return $sale->first();
         } catch (Exception|ModelNotFoundException $e) {
@@ -70,23 +70,25 @@ class SaleRepository implements ISaleRepository
     {
         try {
             $sale = Sale::query()->find($id);
-            if (!$sale)
-                return new SaleCanceledError('Sale not found');
 
-            $sale = $sale->first();
+            if (! $sale) {
+                return new SaleCanceledError('Sale not found');
+            }
+
+            $sale               = $sale->first();
             $sale->cancelled_at = Carbon::now()->toDateTimeString();
             $sale->save();
 
             return $sale;
         } catch (Exception|ModelNotFoundException) {
-            throw  new SaleCanceledError('Sale cannot be canceled');
+            throw new SaleCanceledError('Sale cannot be canceled');
         }
     }
 
     /**
      * @throws SalesNotFound
      */
-    public function addProductsToSale(int $id,  $products, $newAmount): Sale|SalesNotFound
+    public function addProductsToSale(int $id, $products, $newAmount): Sale|SalesNotFound
     {
         try {
             $sale = Sale::query()->find($id);
@@ -98,10 +100,12 @@ class SaleRepository implements ISaleRepository
             $sale = $sale->first();
 
             $sale->amount += $newAmount;
+
             foreach ($products as $product) {
-                $sale->products()->attach($product['id'], array('quantity' => $product['quantity']));
+                $sale->products()->attach($product['id'], ['quantity' => $product['quantity']]);
             }
             $sale->save();
+
             return $sale;
         } catch (Exception|ModelNotFoundException) {
             throw new SalesNotFound('Sale not found');

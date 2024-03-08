@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace App\GraphQL\Queries;
 
@@ -6,8 +8,7 @@ use Core\UseCases\ProductUseCase;
 
 final readonly class ListProducts
 {
-
-    public function __construct(private    ProductUseCase $productUseCase)
+    public function __construct(private ProductUseCase $productUseCase)
     {
     }
 

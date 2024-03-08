@@ -16,22 +16,24 @@ class CancelSaleController extends Controller
     {
     }
 
-
     /**
      * @OA\Patch(
      *     path="/api/sale/cancel/{id}",
      *     tags={"Sales"},
      *     summary="Cancel a sale",
      *     description="Cancel a especific sale",
+     *
      *     @OA\Parameter(
      *     name="id",
      *     in="path",
      *     required=true,
      *     description="Sale id",
      *     ),
+     *
      *     @OA\Response(
      *     response=200,
      *     description="Sale canceled",
+     *
      *     @OA\JsonContent(ref="#/components/schemas/ListSales",)
      * ),
      * ),
@@ -46,7 +48,7 @@ class CancelSaleController extends Controller
             }
 
             return response()->json(
-               new SaleOutput($sale),
+                new SaleOutput($sale),
                 Response::HTTP_OK
             );
         } catch (Exception $e) {
