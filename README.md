@@ -31,10 +31,10 @@ http://localhost:9090
 ```
 
 ### Documentação da API & Testes
-[Swagger](http://localhost:9090/api-docs)
+[Swagger](http://localhost:9090/api/docs)
 
 ### Também Está disponível a api em uma versão utilizando GraphQL
-[GraphQL](http://localhost:9090/graphiql)
+[GraphQL](http://localhost:9090/graphiql) o graphql playground já tem a própria documentação e autocomplete das queries e mutations disponíveis.
 
 
 ```
