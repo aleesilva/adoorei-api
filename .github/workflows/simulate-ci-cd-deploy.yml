@@ -75,10 +75,3 @@ jobs:
           DB_CONNECTION: sqlite
           DB_DATABASE: ":memory:"
         run: ./vendor/bin/pest
-
-  deploy:
-    name: Deploy
-    runs-on:  ubuntu-20.04
-    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master' && github.event_name == 'push'
-    needs:
-      - php-lint-with-pint
