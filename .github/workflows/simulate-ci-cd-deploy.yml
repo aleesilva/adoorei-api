@@ -30,9 +30,7 @@ jobs:
         with:
           commit_message: "🚀 Laravel Pint"
           skip_fetch: true
-        run: |
-          git config --local user.email "
-            git config --local user.name "GitHub Actions"
+
 
       - name: Push changes
         id: git-push
@@ -43,9 +41,8 @@ jobs:
 
       - name: Install Dependencies
         id: InstallDependencies
-        if: steps.vendor-cache.outputs.cache-hit != 'true'
+        if: 'steps.vendor-cache.outputs.cache-hit' != 'true'
         run:  composer install --no-ansi --no-interaction --no-progress --no-suggest --prefer-dist
-
 
       - name: Copy .env
         id: CopyEnv
