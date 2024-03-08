@@ -2,10 +2,9 @@
 
 namespace App\GraphQL\Mutations;
 
+use App\DTOs\AddProductsToSaleDTO;
 use Core\UseCases\SalesUseCase;
 use Exception;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Log;
 
 final readonly class AddProductsToSale
 {
@@ -19,16 +18,11 @@ final readonly class AddProductsToSale
     {
 
         try {
-            $sale = $this->salesUseCase->addProductsToSale(
-                $args['saleId'],
-                $args['input'][0]
-            );
+            $input['sale_id'] = $args['saleId'];
+            $input['products'] = $args['input'][0]['products'];
 
-            if ($sale instanceof Exception) {
-                return ['error' => $sale->getMessage()];
-            }
-
-            return $sale;
+            $inputDTO = AddProductsToSaleDTO::fromArray($input);
+            return $this->salesUseCase->addProductsToSale($inputDTO);
         } catch (Exception $e) {
             return ['error' => $e->getMessage()];
         }

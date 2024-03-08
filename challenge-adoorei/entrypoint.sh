@@ -5,6 +5,7 @@ composer install --no-interaction
 npm install --no-interaction --no-progress
 
 composer dump-autoload
+php artisan l5-swagger:generate
 php artisan clear-compiled && \
 php artisan config:clear && \
 php artisan event:clear && \

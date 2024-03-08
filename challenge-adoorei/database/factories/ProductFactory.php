@@ -20,7 +20,7 @@ class ProductFactory extends Factory
         // Generate Faker price
 
         return [
-            'name'        => 'Celular '.$this->faker->randomNumber(1, 10),
+            'name'        => 'Celular - '.$this->faker->randomNumber(1, 10),
             'price'       => $this->faker->numberBetween(100, 1000),
             'description' => $this->faker->text,
         ];

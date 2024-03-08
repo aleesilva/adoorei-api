@@ -2,6 +2,7 @@
 
 namespace Core\UseCases\Sales;
 
+use App\DTOs\AddProductsToSaleDTO;
 use App\Exceptions\SalesNotFound;
 use App\Models\Product;
 use App\Models\Sale;
@@ -20,18 +21,18 @@ readonly class AddProductsToSaleUseCase
     /**
      * @throws SalesNotFound
      */
-    public function execute($id, $products): Sale|SalesNotFound|Exception
+    public function execute( AddProductsToSaleDTO $input): Sale|SalesNotFound|Exception
     {
         $sale['amount'] = 0;
-        foreach ($products['products'] as $product) {
+
+        foreach ($input->products as $product) {
             $p = Product::query()->find($product['id']);
             if (!$p) {
                 return new Exception('Product not found');
             }
             $sale['amount'] += $p->price * $product['quantity'];
         }
-
-        return $this->saleRepository->addProductsToSale($id, $products, $sale['amount']);
+        return $this->saleRepository->addProductsToSale($input->sale_id, $input->products, $sale['amount']);
 
     }
 }
