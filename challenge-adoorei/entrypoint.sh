@@ -1,10 +1,13 @@
 #!/usr/bin/env sh
 
+cp .env.example .env
+
 composer install --no-interaction
 
 npm install --no-interaction --no-progress
 
 composer dump-autoload
+php artisan key:generate
 php artisan l5-swagger:generate
 php artisan clear-compiled && \
 php artisan config:clear && \
