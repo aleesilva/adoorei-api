@@ -23,7 +23,7 @@ class AddProductsToSaleController extends Controller
      *     path="/api/sale/add-products",
      *     tags={"Sales"},
      *     summary="Create a new sale",
-     *     description="Create a new sale",
+     *     description="Add products to a existing sale",
      *     @OA\RequestBody(
      *     required=true,
      *     @OA\JsonContent(

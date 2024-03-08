@@ -21,7 +21,7 @@ class FindSaleController extends Controller
      *     path="/api/sale/{id}",
      *     tags={"Sales"},
      *     summary="Find a sale",
-     *     description="Find a sale",
+     *     description="Find a sale by id",
      *     @OA\Parameter(
      *     name="id",
      *     in="path",

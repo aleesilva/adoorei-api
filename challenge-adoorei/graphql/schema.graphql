@@ -38,6 +38,8 @@ type Sale {
     id: ID!
     "The amount of the sale."
     amount: Float!
+    "The date of sale has been canceled."
+    cancelled_at: DateTime
     "The products of the sale."
     products: [SaleProducts!]!
 }

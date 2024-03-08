@@ -22,7 +22,7 @@ class CancelSaleController extends Controller
      *     path="/api/sale/cancel/{id}",
      *     tags={"Sales"},
      *     summary="Cancel a sale",
-     *     description="Cancel a sale",
+     *     description="Cancel a especific sale",
      *     @OA\Parameter(
      *     name="id",
      *     in="path",
