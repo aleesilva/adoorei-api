@@ -70,4 +70,4 @@ jobs:
           DB_DATABASE: ":memory:"
         run: |
           cd challenge-adoorei
-          ./vendor/bin/pest
+          php artisan test
