@@ -27,7 +27,7 @@ jobs:
       - name: Install Dependencies
         id: InstallDependencies
         if: steps.vendor-cache.outputs.cache-hit != 'true'
-        run:  composer install --no-ansi --no-interaction --no-progress --no-suggest --prefer-dist
+        run:  composer install --no-ansi --no-interaction --no-progress --prefer-dist
 
       - name: Copy .env
         id: CopyEnv
