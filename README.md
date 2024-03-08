@@ -36,15 +36,17 @@ http://localhost:9090
 ### Também Está disponível a api em uma versão utilizando GraphQL
 [GraphQL](http://localhost:9090/graphiql) o graphql playground já tem a própria documentação e autocomplete das queries e mutations disponíveis.
 
-
+### Para rodar a suite de testes
 ```
 php artisan test
 ```
 
-### 🛠 Tecnologias
+#### Também adicionei um processo Fake de CI/CD com o Github Actions
+
+
+## 🛠 Tecnologias
 As seguintes ferramentas foram usadas na construção do projeto:
 
-### Para rodar a suite de testes
 
 
 <p align="center">
