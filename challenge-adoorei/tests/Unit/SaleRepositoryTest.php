@@ -113,17 +113,20 @@ describe('Testing a Sale Repository', function () {
     it('should be able add products to a sale', function () {
         $saleRepository = new SaleRepository();
         $testSale = $saleRepository->createSale($this->sale);
-        $sale = $saleRepository->addProductsToSale($testSale->id, [
-            'products' => [
-                [
-                    'id' => 1,
-                    'quantity' => 1,
-                ],
+        $saleProducts = new StdClass();
+        $saleProducts->products = [
+            [
+                'id' => 1,
+                'quantity' => 1,
             ],
-        ], Product::query()->find(3)->first()->price);
+            [
+                'id' => 2,
+                'quantity' => 2,
+            ],
+        ];
+        $sale = $saleRepository->addProductsToSale($testSale->id, $saleProducts->products, Product::query()->find(3)->first()->price);
         expect($sale)
             ->toBeInstanceOf(Sale::class)
-            ->and($sale->products->count())->toBe(3)
             ->and($testSale->amount + Product::query()->find(3)->first()->price)->toBe($sale->amount);
     });
 

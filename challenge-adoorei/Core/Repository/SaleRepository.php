@@ -86,7 +86,7 @@ class SaleRepository implements ISaleRepository
     /**
      * @throws SalesNotFound
      */
-    public function addProductsToSale(int $id, array $products, $newAmount): Sale|SalesNotFound
+    public function addProductsToSale(int $id,  $products, $newAmount): Sale|SalesNotFound
     {
         try {
             $sale = Sale::query()->find($id);
@@ -98,7 +98,7 @@ class SaleRepository implements ISaleRepository
             $sale = $sale->first();
 
             $sale->amount += $newAmount;
-            foreach ($products['products'] as $product) {
+            foreach ($products as $product) {
                 $sale->products()->attach($product['id'], array('quantity' => $product['quantity']));
             }
             $sale->save();

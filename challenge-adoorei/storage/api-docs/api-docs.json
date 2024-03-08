@@ -43,7 +43,103 @@
                 }
             }
         },
+        "/api/sale/add-products": {
+            "post": {
+                "tags": [
+                    "Sales"
+                ],
+                "summary": "Create a new sale",
+                "description": "Create a new sale",
+                "operationId": "3fc26a21977d5cd6ab935e1ae0963789",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "products, sale_id"
+                                ],
+                                "properties": {
+                                    "sale_id": {
+                                        "type": "integer"
+                                    },
+                                    "products": {
+                                        "type": "array",
+                                        "items": {
+                                            "$ref": "#/components/schemas/CreateSaleInputProducts"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Sale created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListSales"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sale/cancel/{id}": {
+            "patch": {
+                "tags": [
+                    "Sales"
+                ],
+                "summary": "Cancel a sale",
+                "description": "Cancel a sale",
+                "operationId": "e24c2a05dc7e097bf5536dac40c622f2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Sale id",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sale canceled",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListSales"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/sales": {
+            "get": {
+                "tags": [
+                    "Sales"
+                ],
+                "summary": "List all sales",
+                "description": "List all sales",
+                "operationId": "c8c0a118ddce6f67b6fbd5c024e9a687",
+                "responses": {
+                    "200": {
+                        "description": "List of sales",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListSales"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "tags": [
                     "Sales"
@@ -56,10 +152,15 @@
                     "content": {
                         "application/json": {
                             "schema": {
+                                "required": [
+                                    "products"
+                                ],
                                 "properties": {
-                                    "product_id": {
-                                        "description": "Product ID",
-                                        "type": "integer"
+                                    "products": {
+                                        "type": "array",
+                                        "items": {
+                                            "$ref": "#/components/schemas/CreateSaleInputProducts"
+                                        }
                                     }
                                 },
                                 "type": "object"
@@ -68,8 +169,153 @@
                     }
                 },
                 "responses": {
-                    "201": {
-                        "description": "Sale created"
+                    "200": {
+                        "description": "Sale created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListSales"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/sale/{id}": {
+            "get": {
+                "tags": [
+                    "Sales"
+                ],
+                "summary": "Find a sale",
+                "description": "Find a sale",
+                "operationId": "cd63e63858af1b5cb7751b0427625913",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Sale id",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Sale found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListSales"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ListSales": {
+                "properties": {
+                    "sale_id": {
+                        "description": "Sale id",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "amount": {
+                        "description": "Sale amount",
+                        "type": "number",
+                        "example": "100.00"
+                    },
+                    "products": {
+                        "description": "List of products",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ListSalesProducts"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "ListSalesProducts": {
+                "properties": {
+                    "product_id": {
+                        "description": "Product id",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "name": {
+                        "description": "Product name",
+                        "type": "string",
+                        "example": "Product 1"
+                    },
+                    "price": {
+                        "description": "Product price",
+                        "type": "number",
+                        "example": "100.00"
+                    },
+                    "quantity": {
+                        "description": "Product quantity",
+                        "type": "integer",
+                        "example": "1"
+                    }
+                },
+                "type": "object"
+            },
+            "CreateSaleInput": {
+                "required": [
+                    "products"
+                ],
+                "properties": {
+                    "products": {
+                        "description": "List of Products",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CreateSaleInputProducts"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "CreateSaleInputProducts": {
+                "required": [
+                    "id"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "Product id",
+                        "type": "integer",
+                        "example": "1"
+                    },
+                    "quantity": {
+                        "description": "Product quantity",
+                        "type": "integer",
+                        "example": "1"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "responses": {
+            "listSales": {
+                "description": "List of sales",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ListSales"
+                        }
+                    }
+                }
+            }
+        },
+        "requestBodies": {
+            "CreateSaleInput": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/CreateSaleInput"
+                        }
                     }
                 }
             }

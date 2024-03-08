@@ -18,10 +18,10 @@ use Illuminate\Database\Eloquent\Collection;
 readonly class SalesUseCase
 {
     public function __construct(
-        private CreateSalesUseCase $createSalesUseCase,
-        private ListSalesUseCase   $listSalesUseCase,
-        private FindSaleUseCase    $findSaleUseCase,
-        private CancelSaleUseCase  $cancelSaleUseCase,
+        private CreateSalesUseCase       $createSalesUseCase,
+        private ListSalesUseCase         $listSalesUseCase,
+        private FindSaleUseCase          $findSaleUseCase,
+        private CancelSaleUseCase        $cancelSaleUseCase,
         private AddProductsToSaleUseCase $addProductsToSaleUseCase
     )
     {
@@ -48,7 +48,7 @@ readonly class SalesUseCase
      */
     public function findSale(int $id): Sale|SalesNotFound
     {
-            return $this->findSaleUseCase->execute($id);
+        return $this->findSaleUseCase->execute($id);
     }
 
     /**
@@ -62,8 +62,8 @@ readonly class SalesUseCase
     /**
      * @throws SalesNotFound
      */
-    public function addProductsToSale(int $id, array $products): Sale|SalesNotFound
+    public function addProductsToSale(AddProductsToSaleDTO $products): Sale|SalesNotFound
     {
-        return $this->addProductsToSaleUseCase->execute($id, $products);
+        return $this->addProductsToSaleUseCase->execute($products);
     }
 }
