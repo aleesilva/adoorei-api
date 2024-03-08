@@ -1,0 +1,59 @@
+name: Simulate CI/CD Deploy
+
+on:
+  push:
+    branches:
+      - 'develop'
+      - 'master'
+      - 'feature/*'
+jobs:
+  php-lint-with-pint:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        operating-system: [ ubuntu-latest ]
+        php-versions: [ '8.2' ]
+        dependency-stability: [ 'stable' ]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+      - name: Laravel Pint
+        id: LaravelPint
+        uses: aglipanci/laravel-pint-action@0.1.0
+        with:
+          preset: laravel
+
+      - name: Install Dependencies
+        id: InstallDependencies
+        if: steps.vendor-cache.outputs.cache-hit != 'true'
+        run:  composer install --no-ansi --no-interaction --no-progress --prefer-dist
+
+      - name: Copy .env
+        id: CopyEnv
+        run: |
+          cp .env.example .env
+
+      - name: Generate key
+        id: GenerateKey
+        run: php artisan key:generate
+
+      - name: Directory Permissions
+        id: DirectoryPermissions
+        run: chmod -R 777 storage bootstrap/cache
+
+      - name: Run Migrations
+        id: Migrations
+        env:
+          SESSION_DRIVER: array
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ":memory:"
+        run: php artisan migrate --env=local
+
+      - name: Execute test(Unit and Feature tests) PestPHP
+        id: PestPHP
+        env:
+          SESSION_DRIVER: array
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ":memory:"
+        run: ./vendor/bin/pest
