@@ -4,8 +4,9 @@ on:
   push:
     branches:
       - 'develop'
-      - 'master'
       - 'feature/*'
+      - 'master'
+
 jobs:
   php-lint-with-pint:
     runs-on: ubuntu-20.04
@@ -28,9 +29,8 @@ jobs:
         id: git-auto-commit
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "🚀 Laravel Pint"
+          commit_message: PHP Linting (Pint)
           skip_fetch: true
-
 
       - name: Push changes
         id: git-push
@@ -41,13 +41,16 @@ jobs:
 
       - name: Install Dependencies
         id: InstallDependencies
-        if: 'steps.vendor-cache.outputs.cache-hit' != 'true'
-        run:  composer install --no-ansi --no-interaction --no-progress --no-suggest --prefer-dist
+        if: steps.vendor-cache.outputs.cache-hit != 'true'
+        run: |
+          composer config --global -a http-basic.github.com x-access-token ${{ secrets.COMPOSE_TOKEN }}
+          composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
       - name: Copy .env
         id: CopyEnv
         run: |
           cp .env.example .env
+          cp .env .env.testing
 
       - name: Generate key
         id: GenerateKey
@@ -59,6 +62,7 @@ jobs:
 
       - name: Run Migrations
         id: Migrations
+        # Set environment
         env:
           SESSION_DRIVER: array
           DB_CONNECTION: sqlite
@@ -72,3 +76,10 @@ jobs:
           DB_CONNECTION: sqlite
           DB_DATABASE: ":memory:"
         run: ./vendor/bin/pest
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master'
+    needs:
+      - php-lint-with-pint
