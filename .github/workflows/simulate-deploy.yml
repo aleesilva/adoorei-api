@@ -25,13 +25,6 @@ jobs:
         with:
           preset: laravel
 
-      - name: Push changes
-        id: git-push
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
-
       - name: Install Dependencies
         id: InstallDependencies
         if: steps.vendor-cache.outputs.cache-hit != 'true'
